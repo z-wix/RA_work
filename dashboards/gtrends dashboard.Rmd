@@ -23,26 +23,24 @@ library(ggplot2)
 library(DT)
 library(rsconnect)
 
-# For Streamgraph
+# Package Required For Streamgraph installed from github repo
 # devtools::install_github("hrbrmstr/streamgraph")
 library(streamgraph)
 
-# Topic Map
+# Packages Required For Topic Mapping
 library(tidytext)
 library(igraph)
 library(ggraph)
 
 # Import State Dataset We can use for long lists of states for choices in inputs
-states <- read_csv("states_list.csv") %>% 
+states <- read_csv(here::here("data","states_list.csv")) %>% 
   mutate(
     country = "US",
     state_code = str_c(country, Abbreviation, sep = "-")
   )
 
-#### Do we need the regions like Northwest, etc.
-
 # US Population data from census bureau
-uspop <- read.csv(here::here("2019PopByRegionAndState.csv")) %>% 
+uspop <- read.csv(here::here("data", "2019PopByRegionAndState.csv")) %>% 
   rename(location = "Region")
 
 ```
