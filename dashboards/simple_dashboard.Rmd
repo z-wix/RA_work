@@ -1,0 +1,56 @@
+---
+title: "Diamonds Dashbaord"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    theme: yeti
+runtime: shiny
+---
+
+This is a simple flexdashboard. By using the flexdashboard template it is already set up in a simple three chart layout. One main chart and two subcharts.
+
+```{r setup, include=FALSE}
+# Packages
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+
+# Data Import
+diamonds <- diamonds
+```
+
+Sidebar {sidebar}
+-----------------------------------------------------------------------
+
+This is the side bar where you can put inputs that will influence your charts
+
+```{r}
+
+```
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
