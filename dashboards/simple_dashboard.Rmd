@@ -1,56 +1,108 @@
 ---
-title: "Diamonds Dashbaord"
+title: "Customer Credit Dashbaord"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
+    orientation: rows
+    vertical_layout: scroll
     theme: yeti
 runtime: shiny
 ---
-
-This is a simple flexdashboard. By using the flexdashboard template it is already set up in a simple three chart layout. One main chart and two subcharts.
 
 ```{r setup, include=FALSE}
 # Packages
 library(flexdashboard)
 library(shiny)
 library(tidyverse)
+library(ggthemes)
 
 # Data Import
-diamonds <- diamonds
+customer_data <- read_csv(here::here("data", "customer_data.csv"))
 ```
 
-Sidebar {sidebar}
+Sidebar {.sidebar}
 -----------------------------------------------------------------------
 
 This is the side bar where you can put inputs that will influence your charts
 
+******
+
 ```{r}
 
+# State Selection
+selectInput(
+  "state",
+  "State",
+  choices = unique(customer_data[,9]),
+  selected = "UT"
+)
+
+# Marital Status Selection
+selectInput(
+  "marital",
+  "Marital Status",
+  choices = c("Yes", "No"),
+  selected = "Yes"
+)
+
+# College Degree Selection
+selectInput(
+  "college",
+  "College Degree",
+  choices = c("Yes", "No"),
+  selected = "Yes"
+)
 ```
 
 
-Column {data-width=650}
+Row
 -----------------------------------------------------------------------
 
 ### Chart A
 
 ```{r}
+renderPlot({
+  customer_data %>% 
+    filter(state == input$state) %>% 
+    filter(married == input$marital) %>% 
+    filter(college_degree == input$college) %>% 
+    ggplot(aes(x = birth_year, y = credit, size = income, color = gender, alpha = 0.2)) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    theme_minimal()
+})
+
 
 ```
 
-Column {data-width=350}
+Row 
 -----------------------------------------------------------------------
 
 ### Chart B
 
 ```{r}
 
+customer_data %>% 
+  filter(state == "UT") %>% 
+  filter(married == "Yes") %>% 
+  ggplot(aes(x = birth_year, y = credit, size = income, color = gender, alpha = 0.5)) +
+  geom_point() +
+  theme_minimal()
+
 ```
 
 ### Chart C
 
 ```{r}
+
+customer_data %>% 
+  filter(state == "UT") %>% 
+  filter(married == "Yes") %>% 
+  filter(college_degree == "Yes") %>% 
+  ggplot(aes(x = birth_year, y = credit, size = income, color = gender, alpha = 0.5)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_minimal()
+
 
 ```
 
