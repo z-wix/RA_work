@@ -14,6 +14,7 @@ library(flexdashboard)
 library(shiny)
 library(tidyverse)
 library(ggthemes)
+library(DT)
 
 # Data Import
 customer_data <- read_csv(here::here("data", "customer_data.csv"))
@@ -27,6 +28,13 @@ This is the side bar where you can put inputs that will influence your charts
 ******
 
 ```{r}
+
+# Region Selection
+selectInput(
+  "region",
+  "Region",
+  choices = unique(customer_data[,8])
+)
 
 # State Selection
 selectInput(
@@ -77,9 +85,17 @@ renderPlot({
 Row 
 -----------------------------------------------------------------------
 
-### Chart B
+### Summary Table
 
 ```{r}
+DT::renderDataTable({
+  customer_data %>% 
+    group_by(region) %>% 
+    summarize(
+      ave_credit = round(mean(credit), 1),
+      ave_income = round(mean(income), 1)
+    )
+})
 
 
 
@@ -89,6 +105,14 @@ Row
 
 ```{r}
 
+renderTable({
+  customer_data %>% 
+    group_by(region) %>% 
+    summarize(
+      ave_credit = round(mean(credit), 1),
+      ave_income = round(mean(income), 1)
+    )
+})
 
 
 ```
