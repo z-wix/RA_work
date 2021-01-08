@@ -12,15 +12,14 @@ output:
 ![](~/Work/Dotson RA/RA_work/flexdashboard_hex.png){width=650px, hieght=500px}
 </center>
 
-## Data Summarization
+## Why Dashboards?
 
-- Data summarization (as part of an **exploratory analysis**) is all about discovery: What is your data saying?
-  + Describe data with numerical summaries (i.e., **statistics**).
-  + Visualize data with graphical summaries.
-- How we summarize depends on whether the data is **discrete** or **continuous**.
-  + Discrete is also called qualitative or categorical.
-  + Continuous is also called quantitative or numerical.
-- We will use both dplyr and ggplot2 to summarize data.
+- Dashbaords create an easy way to interpret and report data to others.
+  + Key performance indicators
+  + Data visualizations
+  + Exploring Data
+- Interactive Dashboards allow users to manipulate the data that is used in the visualizations
+  + Filters
 
 ---
 
