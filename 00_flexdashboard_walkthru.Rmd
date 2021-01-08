@@ -6,31 +6,262 @@ output:
     widescreen: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+## Interactive Dashboards (image of dashboard)
+
+<center>
+![](~/Work/Dotson RA/RA_work/flexdashboard_hex.png){width=650px, hieght=500px}
+</center>
+
+## Data Summarization
+
+- Data summarization (as part of an **exploratory analysis**) is all about discovery: What is your data saying?
+  + Describe data with numerical summaries (i.e., **statistics**).
+  + Visualize data with graphical summaries.
+- How we summarize depends on whether the data is **discrete** or **continuous**.
+  + Discrete is also called qualitative or categorical.
+  + Continuous is also called quantitative or numerical.
+- We will use both dplyr and ggplot2 to summarize data.
+
+---
+
+```{r message=FALSE}
+library(tidyverse)
+
+mpg
 ```
 
-## R Markdown
+## Describing Discrete Data
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+The simplest numeric summary for a discrete variable is a **count**.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
-
-## Slide with Bullets
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
-
-## Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
+```{r}
+mpg %>% 
+  count(manufacturer)
 ```
 
-## Slide with Plot
+---
 
-```{r pressure}
-plot(pressure)
+- Now get a count by both manufacturer and drive type to produce a "tidy" **cross-tab**.
+- Save this as a new data frame `car_count`.
+
+---
+
+```{r}
+car_count <- mpg %>% 
+  count(manufacturer, drv)
+
+car_count
 ```
 
+## Visualizing Discrete Data
+
+ggplot2 uses a consistent **grammar of graphics** built with **layers**.
+
+1. Data – Data to visualize.
+2. Aesthetics – Mapping graphical elements to data.
+3. Geometries – Or “geom,” the graphic representing the data.
+
+---
+
+Plot our `car_count` data (note how `+` is different from `%>%`).
+
+```{r}
+ggplot(car_count, aes(x = manufacturer, y = n)) +
+  geom_col()
+```
+
+---
+
+- Let’s visualize a second variable. Add the aesthetic `fill = drv`.
+- The geom `position` argument is set to `"stack"` by default. Try `"dodge"` and `"fill"` instead.
+
+---
+
+```{r}
+ggplot(car_count, aes(x = manufacturer, y = n, fill = drv)) +
+  geom_col()
+```
+
+---
+
+```{r}
+ggplot(car_count, aes(x = manufacturer, y = n, fill = drv)) +
+  geom_col(position = "dodge")
+```
+
+---
+
+```{r}
+ggplot(car_count, aes(x = manufacturer, y = n, fill = drv)) +
+  geom_col(position = "fill")
+```
+
+## Describing Continuous Data
+
+The simplest numeric summary for a continuous variable is a **mean**.
+
+```{r}
+mpg %>%
+  summarize(avg_hwy = mean(hwy))
+```
+
+Note that `summarize()` is a more general version of `count()`.
+
+---
+
+- Compute the mean of both highway and city miles per gallon.
+- We can also compute the **mode**, **median**, **variance**, **standard deviation**, **minimum**, **maximum**, etc.
+
+---
+
+```{r}
+mpg %>% 
+  summarize(avg_hwy = mean(hwy), avg_cty = mean(cty))
+```
+
+## Visualizing Continuous Data
+
+With discrete data, we had to create a summary before we created a plot (which is typical).
+
+For continuous data, we can often plot without a summary. Let’s plot the **distribution** of highway miles per gallon.
+
+---
+
+```{r}
+ggplot(mpg, aes(x = hwy)) +
+  geom_histogram()
+```
+
+---
+
+Visualize the relationship between highway and city MPG.
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty)) +
+  geom_point()
+```
+
+---
+
+- What do we do if there is **overplotting**? There’s a geom for that.
+- Play with the `size` and `alpha` geom arguments.
+- Add a `geom_smooth()` layer.
+
+---
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty)) +
+  geom_jitter(size = 3, alpha = 0.5)
+```
+
+---
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty)) +
+  geom_jitter(size = 3, alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+## Describing Discrete and Continuous Data
+
+**Grouped summaries** provide a powerful solution for describing a combination of discrete and continuous data.
+
+```{r}
+mpg %>%
+  group_by(manufacturer) %>%
+  summarize(
+    n = n(),
+    avg_hwy = mean(hwy),
+    avg_cty = mean(cty)
+  )
+```
+
+---
+
+- `count()` is a **wrapper** around a grouped summary with `n()`.
+- Grouping by a discrete variable is equivalent to filtering the data separately for each value of the group variable.
+- Now group by manufacturer and fuel type and arrange the summary in descending order by average highway MPG.
+
+---
+
+```{r}
+mpg %>% 
+  group_by(manufacturer, fl) %>% 
+  summarize(
+    n = n(), 
+    avg_hwy = mean(hwy), 
+    avg_cty = mean(cty)
+  ) %>% 
+  arrange(desc(avg_hwy))
+```
+
+## Visualizing Discrete and Continuous Data
+
+There are geoms specific to visualizing the relationship between discrete and continuous data.
+
+---
+
+```{r}
+ggplot(mpg, aes(x = manufacturer, y = hwy)) +
+  geom_boxplot()
+```
+
+---
+
+But there are a variety of other options to quickly create impressive visuals.
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty)) +
+  geom_jitter(size = 3, alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+---
+
+- Add the aesthetic `color = fl`.
+- Add the layer `facet_wrap(~ manufacturer)`.
+
+---
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty, color = fl)) +
+  geom_jitter(size = 3, alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+---
+
+```{r}
+ggplot(mpg, aes(x = hwy, y = cty, color = fl)) +
+  geom_jitter(size = 3, alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ manufacturer)
+```
+
+## Wrapping Up
+
+*Summary*
+
+- How to open a flexdashboard template through Rmarkdown.
+- How to modify the layout of the dashboard.
+- Create an interactive plot using a sidebar and `selectInput()`. 
+
+*Next Time*
+
+- 
+
+*Supplementary Material*
+
+- Flexdashboard for R webpage: 
+  + link : _https://rmarkdown.rstudio.com/flexdashboard/index.html_
+- RStudio’s Rmarkdown and Flexdashboard Cheatsheets
+
+## Exercise 0
+
+Open the exercise via the RStudio Cloud workspace and do the following.
+
+1. Load the tidyverse.
+2. Explore `mpg` using the functions we've covered.
+3. Provide a few interesting descriptions (numeric summaries) and visualizations (graphical summaries).
+4. Practice good coding conventions: Comment often, write in consecutive lines of code using the `%>%`, and use the demonstrated style (e.g., variable names, spacing within functions).
+5. Export the R script and upload to Learning Suite.
