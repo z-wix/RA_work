@@ -9,7 +9,7 @@ output:
 ## Interactive Dashboards (image of dashboard)
 
 <center>
-![](~/Work/Dotson RA/RA_work/flexdashboard_hex.png){width=650px, hieght=500px}
+![](~/Work/Dotson RA/RA_work/images/flexdashboard_hex.png){width=650px, hieght=500px}
 </center>
 
 ## Why Dashboards?
@@ -90,6 +90,23 @@ Example Images of the different layouts
 
 ---
 
+<center>
+![](~/Work/Dotson RA/RA_work/images/column_orientation.png){width=650px, hieght=500px}
+</center>
+
+---
+
+<center>
+![](~/Work/Dotson RA/RA_work/images/row_orientation.png){width=650px, hieght=500px}
+</center>
+
+---
+
+<center>
+![](~/Work/Dotson RA/RA_work/images/stack_scrolling.png){width=650px, hieght=500px}
+</center>
+
+---
 
 ## Packages
 
