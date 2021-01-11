@@ -14,17 +14,31 @@ output:
 
 ## Why Dashboards?
 
-- Dashbaords create an easy way to interpret and report data to others.
+- Dashboards create an easy way to interpret and report data to others.
   + Key performance indicators
   + Data visualizations
   + Exploring Data
 - Interactive Dashboards allow users to manipulate the data that is used in the visualizations
-  + Filters
 
----
 
+## Flexdashboard
+
+- __flexdashboard__ is an R package that allows you to easily build dashboards using _Rmarkdown_.
+
+- Utilizing _shiny_ functions in a dashboard will help create interactive dashboards.
+
+## Example Dasbhoards
+
+(Maybe some images of dashboards so they know what they look like. Or we can use some that I have built before and play around with them just so they get the gist of it)
+
+## Packages
+
+We use the flexdashboard and shiny packages to access the functions that allow you to build interactive 
 ```{r message=FALSE}
+# Packages
 library(tidyverse)
+library(flexdashboard)
+library(shiny)
 
 mpg
 ```
