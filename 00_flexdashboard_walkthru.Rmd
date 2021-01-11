@@ -66,6 +66,8 @@ The yaml header influences the layout of the dashboard
 
 - vertical_layout changes how it fits the web page with _fill_ or _scroll_ as options
 
+- Another element of the yaml is _theme_. Changes font, color, etc. 
+
 ## Making a Column or Row
 
 Columns and Rows are defined by the level 2 markdown header annotation (`-------------`)
@@ -74,9 +76,11 @@ Columns and Rows are defined by the level 2 markdown header annotation (`-------
 
 ## Code Chunks
 
-Data Visuals (i.e. graphs and tables) and Rendered elements (i.e. `renderText()` and `renderValue()`) will show on the dashboard.
+Any code that has an output will be shown in the dashboard.
 
-Data cleaning, manipulation, etc can be performed in the background just showing the data insights on the dashboard.
+Data cleaning, manipulation, etc can be performed in the background just showing the data insights on the dashboard by assigning it to an object without printing.
+
+Data Visuals (i.e. graphs and tables) and Rendered elements (i.e. `renderText()` and `renderValue()`) will show on the dashboard.
 
 ---
 
@@ -119,90 +123,28 @@ library(shiny)
 mpg
 ```
 
-## Adding a Chart
-
-Make a static ggplot graph. Only __outputs__ will be displayed in the chart
+## Adding Charts
 
 ```{r}
 car_count <- mpg %>% 
   count(manufacturer, drv)
 
-ggplot(car_count, aes(x = manufacturer, y = n)) +
-  geom_col()
-```
-
-## Visualizing Discrete Data
-
-ggplot2 uses a consistent **grammar of graphics** built with **layers**.
-
-1. Data – Data to visualize.
-2. Aesthetics – Mapping graphical elements to data.
-3. Geometries – Or “geom,” the graphic representing the data.
-
----
-
-Plot our `car_count` data (note how `+` is different from `%>%`).
-
-```{r}
-
-```
-
----
-
-- Let’s visualize a second variable. Add the aesthetic `fill = drv`.
-- The geom `position` argument is set to `"stack"` by default. Try `"dodge"` and `"fill"` instead.
-
----
-
-```{r}
-ggplot(car_count, aes(x = manufacturer, y = n, fill = drv)) +
+car_count %>% 
+  filter(n >10) %>% 
+  ggplot(aes(x = manufacturer, y = n, fill = drv)) +
   geom_col()
 ```
 
 ---
 
-```{r}
-ggplot(car_count, aes(x = manufacturer, y = n, fill = drv)) +
-  geom_col(position = "dodge")
-```
-
----
-
-```{r}
-ggplot(car_count, aes(x = manufacturer, y = n, fill = drv)) +
-  geom_col(position = "fill")
-```
-
-## Describing Continuous Data
-
-The simplest numeric summary for a continuous variable is a **mean**.
-
-```{r}
-mpg %>%
-  summarize(avg_hwy = mean(hwy))
-```
-
-Note that `summarize()` is a more general version of `count()`.
-
----
-
-- Compute the mean of both highway and city miles per gallon.
-- We can also compute the **mode**, **median**, **variance**, **standard deviation**, **minimum**, **maximum**, etc.
-
----
+## Adding Table
 
 ```{r}
 mpg %>% 
+  filter(manufacturer == "audi") %>% 
   summarize(avg_hwy = mean(hwy), avg_cty = mean(cty))
 ```
 
-## Visualizing Continuous Data
-
-With discrete data, we had to create a summary before we created a plot (which is typical).
-
-For continuous data, we can often plot without a summary. Let’s plot the **distribution** of highway miles per gallon.
-
----
 
 ```{r}
 ggplot(mpg, aes(x = hwy)) +
