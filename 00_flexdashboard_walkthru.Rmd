@@ -210,35 +210,6 @@ selectInput(
 
 ---
 
-But there are a variety of other options to quickly create impressive visuals.
-
-```{r}
-ggplot(mpg, aes(x = hwy, y = cty)) +
-  geom_jitter(size = 3, alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE)
-```
-
----
-
-- Add the aesthetic `color = fl`.
-- Add the layer `facet_wrap(~ manufacturer)`.
-
----
-
-```{r}
-ggplot(mpg, aes(x = hwy, y = cty, color = fl)) +
-  geom_jitter(size = 3, alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE)
-```
-
----
-
-```{r}
-ggplot(mpg, aes(x = hwy, y = cty, color = fl)) +
-  geom_jitter(size = 3, alpha = 0.5) +
-  geom_smooth(method = "lm", se = FALSE) +
-  facet_wrap(~ manufacturer)
-```
 
 ## Wrapping Up
 
