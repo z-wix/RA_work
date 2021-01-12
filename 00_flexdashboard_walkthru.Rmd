@@ -125,104 +125,87 @@ mpg
 
 ## Adding Charts
 
-```{r}
-car_count <- mpg %>% 
-  count(manufacturer, drv)
-
-car_count %>% 
-  filter(n >10) %>% 
-  ggplot(aes(x = manufacturer, y = n, fill = drv)) +
-  geom_col()
-```
-
----
-
-## Adding Table
+Let's add a filter to a simple graph that we made before.
 
 ```{r}
 mpg %>% 
   filter(manufacturer == "audi") %>% 
-  summarize(avg_hwy = mean(hwy), avg_cty = mean(cty))
-```
-
-
-```{r}
-ggplot(mpg, aes(x = hwy)) +
-  geom_histogram()
-```
-
----
-
-Visualize the relationship between highway and city MPG.
-
-```{r}
-ggplot(mpg, aes(x = hwy, y = cty)) +
-  geom_point()
-```
-
----
-
-- What do we do if there is **overplotting**? There’s a geom for that.
-- Play with the `size` and `alpha` geom arguments.
-- Add a `geom_smooth()` layer.
-
----
-
-```{r}
-ggplot(mpg, aes(x = hwy, y = cty)) +
-  geom_jitter(size = 3, alpha = 0.5)
-```
-
----
-
-```{r}
-ggplot(mpg, aes(x = hwy, y = cty)) +
+  ggplot(aes(x = hwy, y = cty)) +
   geom_jitter(size = 3, alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE)
 ```
 
-## Describing Discrete and Continuous Data
+---
 
-**Grouped summaries** provide a powerful solution for describing a combination of discrete and continuous data.
+## Adding Value Box
+
+Now let's make a value box to call out a particular value that would be interesting
 
 ```{r}
-mpg %>%
+
+summary <- mpg %>%
+  filter(manufacturer == "audi") %>% 
+  summarize(avg_hwy = mean(hwy))
+
+```
+
+---
+Now we need the shiny function `valueBox()` which will put our value in a nice call out box.
+
+Use the _icon_ argument to add a favicon.
+
+Also we are rounding the number so there aren't a lot of decimal places
+
+```{r}
+valueBox(round(summary,2), icon = "fa-car")
+```
+
+### Note on Shiny functions
+
+They will not show up in your plots tab or in the console. You must knit your document and run the dashboard before being able to see these special functions.
+
+## Adding a table
+
+```{r}
+mpg_summary <- mpg %>%
   group_by(manufacturer) %>%
   summarize(
     n = n(),
     avg_hwy = mean(hwy),
     avg_cty = mean(cty)
-  )
-```
-
----
-
-- `count()` is a **wrapper** around a grouped summary with `n()`.
-- Grouping by a discrete variable is equivalent to filtering the data separately for each value of the group variable.
-- Now group by manufacturer and fuel type and arrange the summary in descending order by average highway MPG.
-
----
-
-```{r}
-mpg %>% 
-  group_by(manufacturer, fl) %>% 
-  summarize(
-    n = n(), 
-    avg_hwy = mean(hwy), 
-    avg_cty = mean(cty)
   ) %>% 
-  arrange(desc(avg_hwy))
+  arrange(desc(n))
 ```
 
-## Visualizing Discrete and Continuous Data
+## Making Things Interactive!
 
-There are geoms specific to visualizing the relationship between discrete and continuous data.
+Now that we have our basic plot, value box and table we can make it interactive using render functions and a Side bar
 
----
+
+## Input Sidebar
+
+Sidebars are useful for placing input fields that allow you to interact with your data visualization.
+
+You create an input sidebar similar to making a column but add the parameter of `{.sidebar}`. followed by the same markdown header as a column (`----------------`)
+
+## Input Functions
+
+Input functions allow you to make various kinds of inputs that will let you interact with your data.
+
+Components
+- Input id
+- Input label
+- Choices list
+
+Examples:
+- `selectInput()`
 
 ```{r}
-ggplot(mpg, aes(x = manufacturer, y = hwy)) +
-  geom_boxplot()
+selectInput(
+  "manu_id",
+  "Manufacturer",
+  choices = c(unique(mpg[,1]))
+)
 ```
 
 ---

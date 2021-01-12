@@ -14,36 +14,70 @@ library(tidyverse)
 library(DT)
 ```
 
+Inputs {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+selectInput(
+  "manu_id",
+  "Manufacturer",
+  choices = c(unique(mpg[,1]))
+)
+```
+
+
 Column {data-width=650}
 -----------------------------------------------------------------------
 
 ### Chart A
 
 ```{r}
-
-summary <- mpg %>%
-  summarize(avg_hwy = mean(hwy))
-
-```
-
-```{r}
-renderValueBox({
-  summary
+renderPlot({
+  mpg %>% 
+    filter(year == 2008) %>% 
+    ggplot(aes(x = hwy, y = cty)) +
+    geom_jitter(size = 3, alpha = 0.5) +
+    geom_smooth(method = "lm", se = FALSE)
 })
+
 ```
 
 Column {data-width=350}
 -----------------------------------------------------------------------
 
-### Chart B
+### Average Highway Miles
 
 ```{r}
+
+summary <- mpg %>%
+  filter(manufacturer == "audi") %>% 
+  summarize(avg_hwy = mean(hwy))
+
+valueBox(round(summary,2), icon = "fa-car")
+
+# renderValueBox(summary)
+ # summary %>% 
+ #    rename(
+ #      `Average Highway Miles` = avg_hwy
+ #    )
 
 ```
 
-### Chart C
+### Stats
 
 ```{r}
+mpg_table <- mpg %>%
+  group_by(manufacturer) %>% 
+  summarize(
+    n = n(),
+    avg_hwy = round(mean(hwy),2),
+    avg_cty = round(mean(cty),2)
+  ) %>% 
+  arrange(desc(n))
+
+renderTable({
+  mpg_table
+})
 
 ```
 
