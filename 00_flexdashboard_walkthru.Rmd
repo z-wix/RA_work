@@ -110,8 +110,6 @@ Example Images of the different layouts
 ![](~/Work/Dotson RA/RA_work/images/stack_scrolling.png){width=650px, hieght=500px}
 </center>
 
----
-
 ## Packages
 
 We use the _flexdashboard_ and _shiny_ packages to access the functions that allow you to build interactive plots in a dashboard.
@@ -122,6 +120,8 @@ library(shiny)
 
 mpg
 ```
+
+---
 
 ## Adding Charts
 
@@ -135,7 +135,6 @@ mpg %>%
   geom_smooth(method = "lm", se = FALSE)
 ```
 
----
 
 ## Adding Value Box
 
@@ -156,13 +155,19 @@ Use the _icon_ argument to add a favicon.
 
 Also we are rounding the number so there aren't a lot of decimal places
 
+---
+
 ```{r}
-valueBox(round(summary,2), icon = "fa-car")
+# valueBox(round(summary,2), icon = "fa-car")
 ```
 
-### Note on Shiny functions
+---
+
+## Note on Shiny functions
 
 They will not show up in your plots tab or in the console. You must knit your document and run the dashboard before being able to see these special functions.
+
+---
 
 ## Adding a table
 
@@ -177,35 +182,42 @@ mpg_summary <- mpg %>%
   arrange(desc(n))
 ```
 
+---
+
 ## Making Things Interactive!
 
 Now that we have our basic plot, value box and table we can make it interactive using render functions and a Side bar
 
+---
 
 ## Input Sidebar
 
 Sidebars are useful for placing input fields that allow you to interact with your data visualization.
 
-You create an input sidebar similar to making a column but add the parameter of `{.sidebar}`. followed by the same markdown header as a column (`----------------`)
+You create an input sidebar similar to making a column but add the parameter of `{.sidebar}`.   followed by the same markdown header as a column (`----------------`)
 
 ## Input Functions
 
 Input functions allow you to make various kinds of inputs that will let you interact with your data.
 
-Components
+Components:
+
 - Input id
+
 - Input label
+
 - Choices list
 
 Examples:
+
 - `selectInput()`
 
 ```{r}
-selectInput(
-  "manu_id",
-  "Manufacturer",
-  choices = c(unique(mpg[,1]))
-)
+# selectInput(
+#   "manu_id",
+#   "Manufacturer",
+#   choices = c(unique(mpg[,1]))
+# )
 ```
 
 ---
