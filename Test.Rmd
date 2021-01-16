@@ -1,0 +1,58 @@
+---
+title: "Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(shiny)
+```
+
+
+Sidebar {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+
+numericInput(
+  "top",
+  label = "select number",
+  value = 10
+)
+
+```
+
+
+Column 
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+renderTable({
+  head(mpg, input$top)
+})
+
+```
+
+Column
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
